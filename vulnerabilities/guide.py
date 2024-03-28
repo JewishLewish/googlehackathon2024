@@ -31,15 +31,16 @@ class TheBookofFlawed(Navigation):
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
-            for x, y in getattr(module, "flawed", None)(), getattr(module, "fixed", None)():
+            flawed = getattr(module, "flawed", None)()
+            fixed = getattr(module, "fixed", None)()
+            for x, y in zip(flawed, fixed):
                 solutions.append(codeBlock(flawed=x, fixed=y, type=dir_path.split("""\\""")[-1]   ))
 
         self.solutions = np.array(solutions)
 
     def genPrompt(self):
-
         prompt_part: list[str] = []
         for code in self.solutions:
-            prompt_part.append(f"flawedCode #{code.type} {code.problem}")
-            prompt_part.append(f"betterCode {code.solution}")
+            prompt_part.append(f"PROBLEM #Problem:{code.type}\n {code.problem}")
+            prompt_part.append(f"SOLUTION {code.solution}")
         return prompt_part

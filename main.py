@@ -1,8 +1,9 @@
+import time
 import google.generativeai as genai
 import vulnerabilities.guide
 
 class Const():
-    generation_config = {"temperature":0.9, "top_p":1, "top_k":1}
+    generation_config = {"temperature":.95, "top_p":1, "top_k":1}
     safety_settings = [
         {
             "category": "HARM_CATEGORY_DANGEROUS",
@@ -31,11 +32,6 @@ class Const():
 class GenAI(Const):
     prompt_parts = vulnerabilities.guide.TheBookofFlawed().genPrompt()
     def gen(self, content) -> str:
-        self.prompt_parts.append(f"flawedCode {content}")
-        self.prompt_parts.append("betterCode ")
+        self.prompt_parts.append(f"PROBLEM {content}")
+        self.prompt_parts.append("SOLUTION ")
         return self.model.generate_content(self.prompt_parts).text
-
-
-print(GenAI().gen(""" cursor.execute(f"INSERT INTO users (name, age) VALUES ("+name+","+age+")")
-                  Two word. What is wrong with code?
-"""))

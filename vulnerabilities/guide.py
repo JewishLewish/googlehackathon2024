@@ -15,7 +15,8 @@ class Navigation():
     directories = ("sql_injection",)
 
     def go_through_directory(self):
-        yield from (os.path.abspath(dir_name) for dir_name in self.directories)
+        yield from (os.path.abspath("vulnerabilities\\" + dir_name) for dir_name in self.directories)
+
     
     def numDir(self):
        return len(self.directories)
@@ -36,8 +37,9 @@ class TheBookofFlawed(Navigation):
         self.solutions = np.array(solutions)
 
     def genPrompt(self):
-        return {}
 
-# Example usage
-book = TheBookofFlawed()
-print(book.solutions[0])
+        prompt_part: list[str] = []
+        for code in self.solutions:
+            prompt_part.append(f"flawedCode #{code.type} {code.problem}")
+            prompt_part.append(f"betterCode {code.solution}")
+        return prompt_part

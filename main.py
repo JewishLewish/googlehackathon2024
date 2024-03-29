@@ -1,5 +1,5 @@
+import json
 import secret
-import time
 import google.generativeai as genai
 import vulnerabilities.guide
 
@@ -49,10 +49,12 @@ def get_user_by_id(user_id):
     conn.close()
     return user
 
-Output in following format (json):
+Given a programming problem and a solution, I need you to provide the response in the following JSON format:
 {
-    "Problem":  String -> {TYPE OF PROBLEM; OTHERWISE SAY "NONE"},
-    "Solution": String -> {REWRITTEN CODE WITH THE SOLUTION}
+    "Problem": "{TYPE OF PROBLEM; OTHERWISE SAY 'NONE'}",
+    "Solution": "{REWRITTEN CODE WITH THE SOLUTION}"
 }
 """)
-print(output.replace("\\n","\n"))
+
+#print(output.encode().decode('unicode_escape'))
+print(json.loads(output)["Solution"])

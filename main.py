@@ -1,3 +1,4 @@
+import secret
 import time
 import google.generativeai as genai
 import vulnerabilities.guide
@@ -26,7 +27,7 @@ class Const():
             "threshold": "BLOCK_NONE",
         },
     ]
-    genai.configure(api_key=None)
+    genai.configure(api_key=secret.key)
     model = genai.GenerativeModel("gemini-pro", generation_config=generation_config, safety_settings=safety_settings)
 
 class GenAI(Const):
@@ -35,3 +36,23 @@ class GenAI(Const):
         self.prompt_parts.append(f"PROBLEM {content}")
         self.prompt_parts.append("SOLUTION ")
         return self.model.generate_content(self.prompt_parts).text
+
+
+gemini = GenAI()
+output = gemini.gen("""
+def get_user_by_id(user_id):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    query = "SELECT * FROM users WHERE id = " + user_id
+    cursor.execute(query)
+    user = cursor.fetchone()
+    conn.close()
+    return user
+
+Output in following format (json):
+{
+    "Problem":  String -> {TYPE OF PROBLEM; OTHERWISE SAY "NONE"},
+    "Solution": String -> {REWRITTEN CODE WITH THE SOLUTION}
+}
+""")
+print(output.replace("\\n","\n"))

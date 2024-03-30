@@ -1,16 +1,12 @@
-
-
-def flawed() -> dict[tuple[str]]:
-    table:dict = dict()
+def flawed(table: dict = dict()) -> dict[tuple[str]]:
     table["PYTHON"] = (
-        '''cursor.execute(f"INSERT INTO users (name, age) VALUES ('{name}','{age}')")''', 
+        '''cursor.execute(f"INSERT INTO users (name, age) VALUES ('{name}','{age}')")''',
         '''query = f"SELECT * FROM users WHERE id = '{user_id}'"''',
         '''cursor.execute(f"INSERT INTO users (name, age) VALUES ("+name+","+age+")'''
     )
     return table
 
-def fixed() -> dict[tuple[str]]:
-    table = dict()
+def fixed(table: dict = dict()) -> dict[tuple[str]]:
     table["PYTHON"] = (
         '''cursor.execute("INSERT INTO users (name, age) VALUES (?, ?)", (name, age))''',
         '''query = "SELECT * FROM users WHERE id = %s"

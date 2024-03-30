@@ -36,17 +36,12 @@ class GenAI(Const):
         self.prompt_parts[lang].append(f"PROBLEM {content}")
         self.prompt_parts[lang].append("SOLUTION ")
         return self.model.generate_content(self.prompt_parts[lang]).text
+    
+    def guessLang(self, code:str) -> str:
+        prompt = f"""Look at the following code: \n{code}\nWhat programming language is this? Output answer in all caps."""
+        return self.model.generate_content(prompt).text
 
 
 gemini = GenAI()
-output = gemini.gen("""
-def get_user_by_id(user_id):
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    query = "SELECT * FROM users WHERE id = " + user_id
-    cursor.execute(query)
-    user = cursor.fetchone()
-    conn.close()
-    return user
-""")
+output = gemini.guessLang("""print("hello world")""")
 print(output)

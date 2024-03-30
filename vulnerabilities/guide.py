@@ -1,6 +1,14 @@
+#from utilities.id import identifiers
 import importlib.util
 import os
 import numpy as np
+
+class identifiers():
+    PYTHON = "PYTHON"
+
+    def all(self) -> list:
+        return ["PYTHON"]
+
 
 class codeBlock():
     def __init__(self, flawed, fixed, type) -> None:
@@ -22,6 +30,8 @@ class Navigation():
        return len(self.directories)
 
 class TheBookofFlawed(Navigation):
+    solutionsAll = {lang: [] for lang in identifiers().all()}
+
     solutions: np.ndarray[codeBlock] = np.empty(1, dtype=codeBlock)
 
     def __init__(self):
@@ -31,16 +41,19 @@ class TheBookofFlawed(Navigation):
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
-            flawed = getattr(module, "flawed", None)()
-            fixed = getattr(module, "fixed", None)()
-            for x, y in zip(flawed, fixed):
-                solutions.append(codeBlock(flawed=x, fixed=y, type=dir_path.split("""\\""")[-1]   ))
+            flawed: dict = getattr(module, "flawed", None)()
+            fixed: dict = getattr(module, "fixed", None)()
+            for lang in identifiers().all():
+                self.solutionsAll[lang].append(codeBlock(flawed=flawed[lang], fixed=fixed[lang], type=dir_path.split("""\\""")[-1]))
+            #for x, y in zip(flawed, fixed):
+            #    solutions.append(codeBlock(flawed=x, fixed=y, type=dir_path.split("""\\""")[-1]   ))
 
         self.solutions = np.array(solutions)
 
-    def genPrompt(self):
+    def genPrompt(self, lang: str = identifiers().PYTHON):
         prompt_part: list[str] = []
-        for code in self.solutions:
+        for code in self.solutionsAll[lang]:
             prompt_part.append(f"PROBLEM #Problem:{code.type}\n {code.problem}")
             prompt_part.append(f"SOLUTION {code.solution}")
+        
         return prompt_part

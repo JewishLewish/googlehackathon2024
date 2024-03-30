@@ -48,13 +48,4 @@ def get_user_by_id(user_id):
     user = cursor.fetchone()
     conn.close()
     return user
-
-Given a programming problem and a solution, I need you to provide the response in the following JSON format:
-{
-    "Problem": "{TYPE OF PROBLEM; OTHERWISE SAY 'NONE'}",
-    "Solution": "{REWRITTEN CODE WITH THE SOLUTION}"
-}
 """)
-
-#print(output.encode().decode('unicode_escape'))
-print(json.loads(output)["Solution"])

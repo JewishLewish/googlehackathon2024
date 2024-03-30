@@ -7,7 +7,7 @@ class identifiers():
     PYTHON = "PYTHON"
 
     def all(self) -> list:
-        return ["PYTHON"]
+        return [self.PYTHON]
 
 
 class codeBlock():
@@ -43,21 +43,18 @@ class TheBookofFlawed(Navigation):
             fixed: dict = getattr(module, "fixed", None)()
             for lang in identifiers().all():
                 self.solutionsAll[lang].append(codeBlock(flawed=flawed[lang], fixed=fixed[lang], type=dir_path.split("""\\""")[-1]))
-            #for x, y in zip(flawed, fixed):
-            #    solutions.append(codeBlock(flawed=x, fixed=y, type=dir_path.split("""\\""")[-1]   ))
 
 
     def genPrompt(self):
         prompt_part = {lang: [] for lang in identifiers().all()}
+        identifiers_all = identifiers().all()
+        solutions_all = self.solutionsAll
         
-        for lang in identifiers().all():
-            for code in self.solutionsAll[lang]:
-                prompt_part[lang].append(f"PROBLEM #Problem:{code.type}\n {code.problem}")
-                prompt_part[lang].append(f"SOLUTION {code.solution}")
+        for lang in identifiers_all:
+            for code in solutions_all[lang]:
+                prompt_part[lang].extend([
+                    f"PROBLEM #Problem:{code.type}\n {code.problem}",
+                    f"SOLUTION {code.solution}"
+                ])
 
-        #prompt_part: list[str] = []
-        #for code in self.solutionsAll[lang]:
-        #    prompt_part.append(f"PROBLEM #Problem:{code.type}\n {code.problem}")
-        #    prompt_part.append(f"SOLUTION {code.solution}")
-        
         return prompt_part

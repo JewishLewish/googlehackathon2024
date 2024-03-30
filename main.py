@@ -32,10 +32,10 @@ class Const():
 
 class GenAI(Const):
     prompt_parts = vulnerabilities.guide.TheBookofFlawed().genPrompt()
-    def gen(self, content) -> str:
-        self.prompt_parts.append(f"PROBLEM {content}")
-        self.prompt_parts.append("SOLUTION ")
-        return self.model.generate_content(self.prompt_parts).text
+    def gen(self, content, lang: str = vulnerabilities.guide.identifiers().PYTHON) -> str:
+        self.prompt_parts[lang].append(f"PROBLEM {content}")
+        self.prompt_parts[lang].append("SOLUTION ")
+        return self.model.generate_content(self.prompt_parts[lang]).text
 
 
 gemini = GenAI()
@@ -49,3 +49,4 @@ def get_user_by_id(user_id):
     conn.close()
     return user
 """)
+print(output)

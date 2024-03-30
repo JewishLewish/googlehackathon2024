@@ -47,10 +47,17 @@ class TheBookofFlawed(Navigation):
             #    solutions.append(codeBlock(flawed=x, fixed=y, type=dir_path.split("""\\""")[-1]   ))
 
 
-    def genPrompt(self, lang: str = identifiers().PYTHON):
-        prompt_part: list[str] = []
-        for code in self.solutionsAll[lang]:
-            prompt_part.append(f"PROBLEM #Problem:{code.type}\n {code.problem}")
-            prompt_part.append(f"SOLUTION {code.solution}")
+    def genPrompt(self):
+        prompt_part = {lang: [] for lang in identifiers().all()}
+        
+        for lang in identifiers().all():
+            for code in self.solutionsAll[lang]:
+                prompt_part[lang].append(f"PROBLEM #Problem:{code.type}\n {code.problem}")
+                prompt_part[lang].append(f"SOLUTION {code.solution}")
+
+        #prompt_part: list[str] = []
+        #for code in self.solutionsAll[lang]:
+        #    prompt_part.append(f"PROBLEM #Problem:{code.type}\n {code.problem}")
+        #    prompt_part.append(f"SOLUTION {code.solution}")
         
         return prompt_part

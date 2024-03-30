@@ -32,10 +32,8 @@ class Navigation():
 class TheBookofFlawed(Navigation):
     solutionsAll = {lang: [] for lang in identifiers().all()}
 
-    solutions: np.ndarray[codeBlock] = np.empty(1, dtype=codeBlock)
 
     def __init__(self):
-        solutions:list[codeBlock] = []
         for dir_path in self.go_through_directory():
             spec = importlib.util.spec_from_file_location("review", os.path.join(dir_path, "review.py"))
             module = importlib.util.module_from_spec(spec)
@@ -48,7 +46,6 @@ class TheBookofFlawed(Navigation):
             #for x, y in zip(flawed, fixed):
             #    solutions.append(codeBlock(flawed=x, fixed=y, type=dir_path.split("""\\""")[-1]   ))
 
-        self.solutions = np.array(solutions)
 
     def genPrompt(self, lang: str = identifiers().PYTHON):
         prompt_part: list[str] = []

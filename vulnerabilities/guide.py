@@ -6,8 +6,8 @@ import numpy as np
 class identifiers():
     PYTHON = "PYTHON"
 
-    def all(self) -> list:
-        return [self.PYTHON]
+    def all(self) -> set:
+        return {self.PYTHON}
 
 
 class codeBlock():

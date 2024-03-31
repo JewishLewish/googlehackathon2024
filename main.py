@@ -32,10 +32,12 @@ class Const():
 
 class GenAI(Const):
     prompt_parts = vulnerabilities.guide.TheBookofFlawed().genPrompt()
+
     def gen(self, content, lang: str = vulnerabilities.guide.identifiers().PYTHON) -> str:
-        self.prompt_parts[lang].append(f"PROBLEM {content}")
-        self.prompt_parts[lang].append("SOLUTION ")
-        return self.model.generate_content(self.prompt_parts[lang]).text
+        genPrompt = self.prompt_parts[lang]
+        genPrompt[lang].append(f"PROBLEM {content}")
+        genPrompt[lang].append("SOLUTION ")
+        return self.model.generate_content(genPrompt).text
     
     def guessLang(self, code:str) -> str:
         prompt = f"""Look at the following code: \n{code}\nWhat programming language is this? Output answer in all caps."""
@@ -43,5 +45,11 @@ class GenAI(Const):
 
 
 gemini = GenAI()
-output = gemini.guessLang("""print("hello world")""")
+output = gemini.guessLang("""
+class GenAI(Const):
+    prompt_parts = vulnerabilities.guide.TheBookofFlawed().genPrompt()
+    def gen(self, content, lang: str = vulnerabilities.guide.identifiers().PYTHON) -> str:
+        self.prompt_parts[lang].append(f"PROBLEM {content}")
+        self.prompt_parts[lang].append("SOLUTION ")
+        return self.model.generate_content(self.prompt_parts[lang]).text""")
 print(output)

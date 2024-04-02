@@ -8,7 +8,7 @@ class identifiers():
     def all(self) -> set:
         return {self.PYTHON}
     
-    def __str__(self) -> set:
+    def __str__(self) -> str:
         return f"Identifiers: {self.all}\n# of Identifiers: {len(self.all)}"
 
 

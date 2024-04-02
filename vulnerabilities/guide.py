@@ -7,6 +7,9 @@ class identifiers():
 
     def all(self) -> set:
         return {self.PYTHON}
+    
+    def __str__(self) -> set:
+        return f"Identifiers: {self.all}\n# of Identifiers: {len(self.all)}"
 
 
 class codeBlock():

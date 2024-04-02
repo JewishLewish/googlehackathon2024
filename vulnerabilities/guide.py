@@ -1,7 +1,6 @@
 #from utilities.id import identifiers
 import importlib.util
 import os
-import numpy as np
 
 class identifiers():
     PYTHON = "PYTHON"
@@ -48,10 +47,9 @@ class TheBookofFlawed(Navigation):
     def genPrompt(self):
         prompt_part = {lang: [] for lang in identifiers().all()}
         identifiers_all = identifiers().all()
-        solutions_all = self.solutionsAll
-        
+
         for lang in identifiers_all:
-            for code in solutions_all[lang]:
+            for code in self.solutionsAll[lang]:
                 prompt_part[lang].extend([
                     f"PROBLEM #Problem:{code.type}\n {code.problem}",
                     f"SOLUTION {code.solution}"

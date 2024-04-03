@@ -37,7 +37,6 @@ class GenAI(Const):
         genPrompt = self.prompt_parts[lang]
         genPrompt.append(f"PROBLEM {content}")
         genPrompt.append("SOLUTION ")
-        print(genPrompt)
         return self.model.generate_content(genPrompt).text
     
     def guessLang(self, code:str) -> str:
@@ -47,8 +46,6 @@ class GenAI(Const):
 
 gemini = GenAI()
 output = gemini.gen("""
-Task:  Solve a series of problems using the knowledge gained from previous solutions.
-
 Role: You are a security analysis, focused on software, tasked to look at code and improve the security of it.
 
 Input:
@@ -59,23 +56,20 @@ Constraints:
 
 You cannot access any external information or knowledge base.
 Your solutions must be based solely on the information provided in the PROBLEM statements and the previous SOLUTION(S).
-You must output the entire code block with the modified solution. If everything is secure then write "DO NOTHING!"
 
+Output:      
+Output must be in valid JSON format.
+{
+    "PROBLEM_TYPE":"{type of problem; if no problem then N\A}",
+    "SOLUTION":"{updated code with problem fixed; if no problem then N\A}"
+}
+             
 The Code:           
-from flask import Flask, render_template_string, request
 
-app = Flask(__name__)
-
-# Vulnerable endpoint rendering HTML template with unsanitized input
-@app.route('/')
-def index():
-    return "Hello world"
-
-if __name__ == '__main__':
-    app.run(debug=True)
+```
+print("Hello world")
+```
 
 """)
 print(output)
 
-
-['PROBLEM #Problem:sql_injection\n (\'cursor.execute(f"INSERT INTO users (name, age) VALUES (\\\'{name}\\\',\\\'{age}\\\')")\', \'query = f"SELECT * FROM users WHERE id = \\\'{user_id}\\\'"\', \'cursor.execute(f"INSERT INTO users (name, age) VALUES ("+name+","+age+")\', \' query = "SELECT * FROM users WHERE username = \\\'{}\\\' AND password = \\\'{}\\\'".format(username, password)\\ncursor.execute(query)\')', 'SOLUTION (\'cursor.execute("INSERT INTO users (name, age) VALUES (?, ?)", (name, age))\', \'query = "SELECT * FROM users WHERE id = %s"\\ncursor.execute(query, (user_id,))\', \'cursor.execute("INSERT INTO users (name, age) VALUES (?, ?)", (name, age))\', \'query = "SELECT * FROM users WHERE username = ? AND password = ?"\\ncursor.execute(query, (username, password))\')', "PROBLEM #Problem:web_development\n #doesn't exist; flask", "SOLUTION @app.after_request\ndef add_header(response):\n    response.headers['X-Content-Type-Options'] = 'nosniff'\n    return response", 'PROBLEM Using previous PROBLEM and SOLUTION as your guide. If nothing can be done, write "DO NOTHING!"\n                    \nfrom flask import Flask, render_template_string, request\n\napp = Flask(__name__)\n\n# Vulnerable endpoint rendering HTML template with unsanitized input\n@app.route(\'/\')\ndef index():\n    name = request.args.get(\'name\')\n    return render_template_string(\'{{ name }}\', name=name)\n\nif __name__ == \'__main__\':\n    app.run(debug=True)\n', 'SOLUTION ']
